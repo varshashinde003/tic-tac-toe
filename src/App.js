@@ -24,17 +24,16 @@ class App extends React.Component {
     })
   }
 
-  handleClick(index) {
+  handleClick =  async (index) => {
     if (!this.state.board[index] && !this.state.winner) {
       let newBoard = this.state.board;
       newBoard[index] = this.state.player;
-      this.setState({
+      await this.setState({
         board: newBoard,
         player: this.state.player === "X" ? "O" : "X",
         counter: this.state.counter + 1
-      }, () => console.log(this.state.counter)
-      );
-      const result = this.checkWinner()
+      });
+      const result = this.checkWinner();
       if (result === "X") {
         this.setState({
           isGameEnded: true,
@@ -61,12 +60,15 @@ class App extends React.Component {
     const moves = [[0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 3, 6], [1, 4, 7], [2, 5, 8], [0, 4, 8], [2, 4, 6]];
     const { board, counter } = this.state;
     for (let i = 0; i < moves.length; i++) {
-      if (board[moves[i][0]] === board[moves[i][1]] && board[moves[i][1]] === board[moves[i][2]]) {
+      if (board[moves[i][0]] && board[moves[i][0]] === board[moves[i][1]] && board[moves[i][1]] === board[moves[i][2]]) {
         return board[moves[i][2]];
-      } else if (counter === 9){
-        return "draw";
-      }
+      } 
     } 
+
+    if(counter === 9) {
+      return "draw";
+    }
+    return "";
     
   }
 
@@ -109,7 +111,7 @@ const ShowBoard = props => {
         )}
       </div>
       <div className="footer">
-        <button type="button" disabled={!winner || winner !== "draw"} className="reset-btn" onClick={restartGame}>
+        <button type="button" disabled={!winner  || winner === "draw"} className="reset-btn" onClick={restartGame}>
           Restart
           </button>
       </div>
